@@ -4,7 +4,7 @@ A macOS tool that sends notifications at random intervals to collect survey resp
 
 ## Features
 
-- Opens the survey at truly randomized intervals (default 1–2 hours; see Environment Variables)
+- Opens the survey at truly randomized intervals (default 30–90 minutes; see Environment Variables)
 - **Screen-on check**: only opens the survey if the display is awake — if the screen is asleep when the timer fires, that survey is skipped and a fresh random timer starts
 - Opens the survey in a new **Google Chrome** window
 - Plays a notification sound (Hero) when the survey opens
@@ -46,12 +46,12 @@ python3 presence_checker.py "https://your-survey-url-here"
 
 The main loop repeats:
 
-1. **Timer Phase**: Waits a random interval between `MIN_INTERVAL` and `MAX_INTERVAL` (currently 1–2 hours).
+1. **Timer Phase**: Waits a random interval between `MIN_INTERVAL` and `MAX_INTERVAL` (currently 30–90 minutes).
 2. **Screen Check**: When the timer expires, checks whether the display is awake (via Quartz `CGDisplayIsAsleep`).
 3. **Decision**: If the screen is on, plays the sound and opens the survey in Chrome. If the screen is asleep, the survey is skipped.
 4. A fresh random interval is chosen and the loop repeats.
 
-**Important**: Because surveys are skipped while the display is asleep, you'll see fewer than one every 1–2 hours in practice.
+**Important**: Because surveys are skipped while the display is asleep, you'll see fewer than one every 30–90 minutes in practice.
 
 > Note: the source also contains an `is_user_active()` idle-time check, but the current loop does **not** call it — only the screen-on state is used.
 
@@ -60,8 +60,8 @@ The main loop repeats:
 The script loads configuration from a `.env` file:
 
 - `SURVEY_URL` - Your Google Form or survey URL (required; falls back to a placeholder if unset)
-- `MIN_INTERVAL` - Minimum seconds between surveys (code default: 1800 = 30 min; currently set to 3600 = 1 hour in `.env`)
-- `MAX_INTERVAL` - Maximum seconds between surveys (code default: 5400 = 90 min; currently set to 7200 = 2 hours in `.env`)
+- `MIN_INTERVAL` - Minimum seconds between surveys (code default and current `.env`: 1800 = 30 min)
+- `MAX_INTERVAL` - Maximum seconds between surveys (code default and current `.env`: 5400 = 90 min)
 - `TEST_MODE` - Set to `true`/`1`/`yes` to use short 30–60 second intervals for testing (ignores `MIN_INTERVAL`/`MAX_INTERVAL`)
 - `PYTHONUNBUFFERED` - Set to `1` (in the LaunchAgent) so log output is written in real time rather than block-buffered
 
